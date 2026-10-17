@@ -1,4 +1,4 @@
-# PC mod → console port: skill and guides (draft)
+# PC mod → console port: skill and guides 
 
 Draft release, 2026-10-17. Distributed by Alex.
 
