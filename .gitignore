@@ -1,0 +1,8 @@
+/package/
+/work/
+*.dat
+*.bin
+*.sfo
+*.dll
+*.dcx
+*.zip

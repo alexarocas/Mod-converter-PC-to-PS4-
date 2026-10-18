@@ -1,14 +1,12 @@
-# PC mod → console port: skill and guides 
+# PC mod → console port: skill and guides (draft)
 
-Draft release, 2026-10-17. Distributed by Alex.
+Draft release, updated 2026-10-18. Distributed by Alex.
 
-A game-agnostic method, for AI assistants and people, to port data-only PC mods to a
-console that already runs homebrew. Proven once: Elden Ring → PS4 (worked example
-included).
+A workflow for investigating and porting data-only PC mods to console, with an Elden Ring → PS4 case study.
 
 ## How to use it with any AI
 
-1. Unzip the package.
+1. Clone this repository or download its source files from GitHub.
 2. Give your AI assistant the whole folder (or `ALL-IN-ONE.md` if it only accepts one
    file).
 3. Write to it, in your own language: "Read AI-START-HERE.md and follow it."
@@ -32,9 +30,21 @@ payloads or firmware, and no links to them.
 ## Credits
 
 - REA (Reverse Engineer Anything), https://github.com/morluto/rea, MIT.
-- Worked example tested with Clever's Moveset Modpack (Nexus Mods 1928); None of the mod's files are included.
+- Worked example tested with Clever's Moveset Modpack (Nexus Mods 1928); Clever is cited
+  with permission. None of the mod's files are included.
 
 ## Licence
 
 - Documentation: CC-BY-4.0.
 - Scripts (`examples/elden-ring-ps4/tools/`): GPL-3.0, full text in `tools/LICENSE`.
+
+
+## Scope and installation
+
+The investigation workflow can guide other games. Included conversion scripts are specific to Elden Ring; other games require format research and new tooling. Successful booting is not full gameplay validation.
+
+Start with the [end-to-end PS4 and Apollo guide](examples/elden-ring-ps4/APOLLO-END-TO-END.md): local IP and FTP, original regulation dump, conversion/deployment, backups, decrypted save export, embedded regulation replacement, Apollo import, gameplay checks and rollback.
+
+For an assistant with directory-based skills, install the `pc-to-console-mod-port` folder in its supported skills directory. Keep `examples/` beside that folder so the worked-example links remain available. Alternatively give the assistant this repository and ask it to read `AI-START-HERE.md`. This is a workflow skill, not an MCP server or a universal mod converter; installation mechanics depend on the assistant.
+
+The repository distributes individual source files. There is no bundled ZIP to maintain.

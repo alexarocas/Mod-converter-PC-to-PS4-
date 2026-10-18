@@ -1,0 +1,14 @@
+// Verify pointer graphs by semantic field paths, independently of the converter's relocation map.
+const fs=require('fs'),path=require('path'),assert=require('assert/strict'),crypto=require('crypto');
+const {hkx,registry,binder,normalize}=require('./hkx-layout.cjs');
+function graph(bytes){const h=hkx(bytes),r=registry(h.types),ranges=h.items.slice(1).map(item=>({...item,end:item.offset+item.count*r.type(item.type).size})).sort((a,b)=>a.offset-b.offset),patches=new Map();
+ function containing(offset){let low=0,high=ranges.length-1;while(low<=high){const mid=(low+high)>>1,t=ranges[mid];if(offset<t.offset)high=mid-1;else if(offset>=t.end)low=mid+1;else return t;}throw Error('Patch outside any item');}
+ function fieldAt(index,offset){const t=r.type(index);assert(offset>=0&&offset<t.size);if((t.format&15)===7){const field=t.fields.find(f=>offset>=f.offset&&offset<f.offset+r.type(f.type).size);assert(field,'Patch in record padding');return field.name+'.'+fieldAt(field.type,offset-field.offset);}if((t.format&15)===8&&t.name==='T[N]'){const st=r.type(t.subType),n=Math.floor(offset/st.size);return '['+n+'].'+fieldAt(t.subType,offset%st.size);}return t.identity+'+'+offset;}
+ for(const group of h.patches)for(const offset of group.offsets){const item=containing(offset),t=r.type(item.type),n=Math.floor((offset-item.offset)/t.size),within=(offset-item.offset)%t.size,key=[item.index,n,t.identity,fieldAt(item.type,within),r.identity(group.type)].join('|');assert(!patches.has(key),'Duplicate semantic patch');const width=r.type(group.type).name==='hkRelArray'?4:8,value=width===8?h.data.readBigUInt64LE(offset):BigInt(h.data.readUInt32LE(offset));assert(value>0n&&value<BigInt(h.items.length));patches.set(key,value.toString());}
+ return {patches,items:h.items.map(i=>({index:i.index,type:r.identity(i.type),count:i.count,kind:i.flags>>>28}))};}
+if(require.main===module){
+const members=binder(fs.readFileSync('analysis-26.1/behavior-conversion/behavior.bnd')),reports=JSON.parse(fs.readFileSync('analysis-26.1/behavior-conversion/experimental/conversion-report.json','utf8')),result=[];
+for(const report of reports){const source=members.find(m=>m.name===report.member),a=graph(source.bytes),b=graph(fs.readFileSync(report.filename));assert.deepEqual(a.items,b.items,'Item identities/counts');assert.equal(a.patches.size,b.patches.size);for(const [key,value] of a.patches)assert.equal(b.patches.get(key),value,'Semantic reference '+key);const digest=crypto.createHash('sha256').update(JSON.stringify([...a.patches].sort((a,b)=>a[0].localeCompare(b[0])))).digest('hex');result.push({member:source.name,itemCount:a.items.length,semanticPointers:a.patches.size,pointerGraphSha256:digest,identicalSemanticPointerGraph:true});}
+fs.writeFileSync('analysis-26.1/behavior-conversion/experimental/graph-verification.json',JSON.stringify(result,null,2));console.log(JSON.stringify(result,null,2));
+}
+module.exports={graph};

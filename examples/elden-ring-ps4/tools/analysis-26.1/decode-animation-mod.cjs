@@ -1,0 +1,6 @@
+const fs=require('fs'),path=require('path'),vm=require('vm'),assert=require('assert/strict'),crypto=require('crypto');
+const out='analysis-26.1/animation-conversion';fs.mkdirSync(out,{recursive:true});
+const ctx={require,Buffer,__dirname:__dirname};vm.createContext(ctx);vm.runInContext(fs.readFileSync('analysis-26.0/analyze-mod.cjs','utf8').split('const inputs=')[0]+';globalThis.unwrap=unwrap;',ctx);
+const sha=b=>crypto.createHash('sha256').update(b).digest('hex');const records=[];
+for(const name of ['c0000.anibnd.dcx','c0000_a00_hi.anibnd.dcx','c0000_a6x.anibnd.dcx']){const packed=fs.readFileSync('analysis-26.1/inputs/chr/'+name);let raw;if(packed.toString('ascii',40,44)==='KRAK'){const oldPacked=fs.readFileSync('analysis-ps4/task-014/mod-chr_'+name);assert(packed.equals(oldPacked),'Reused decode source mismatch');raw=fs.readFileSync('analysis-ps4/task-014/mod-chr_'+name+'.bnd');assert.equal(raw.length,packed.readUInt32BE(28));}else raw=ctx.unwrap(packed).bytes;const destination=path.join(out,'mod-'+name+'.bnd');fs.writeFileSync(destination,raw);records.push({name,sourceSha256:sha(packed),rawSha256:sha(raw),rawLength:raw.length,destination});}
+fs.writeFileSync(path.join(out,'decoded-mod-manifest.json'),JSON.stringify(records,null,2));console.log(JSON.stringify(records,null,2));
