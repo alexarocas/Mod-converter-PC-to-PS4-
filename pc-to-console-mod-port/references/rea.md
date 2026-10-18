@@ -40,7 +40,7 @@ and the person approves.
 
 ## Rules
 
-- Static analysis only. Do not run third-party DLLs or executables to "see what happens".
+- Use static analysis for investigations. A deliberately selected runtime dependency such as Oodle may be loaded only after source/hash checks and user authorization; that is separate from REA inspection.
 - REA shows what a binary contains. It does not prove the console will accept a converted
   file; only a console test proves that.
 - [Unverified] The tool list depends on the installed REA version; use the tools the
@@ -48,7 +48,7 @@ and the person approves.
 
 ## Example (Elden Ring → PS4, verified in the project records)
 
-- Verified the mod ZIP's inventory and integrity, with an evidence record.
+- Archive inventory and integrity were checked with local readers. REA was used for the serializer inspection below; do not attribute every format check to REA.
 - Inspected the Havok serializer library (`Havok.HKLib.Serialization.dll`) statically:
   it writes TAG0/TYPE/ITEM/PTCH and lays out fields from a type registry (offset, size,
   alignment). That explained why raw PC files crash on PS4 and shaped the converter in

@@ -10,7 +10,7 @@ row as true for those files only.
 - BND4: archive inside most `.dcx`. When repacking, keep member order, names, IDs,
   flags and the hash table coherent; re-read every member after writing.
 - `regulation.bin`: encrypted, DCX/ZSTD → BND4 of PARAM tables. The mod's file
-  declared version 11701000 and 194 tables. Do not repack (CE-34878-0).
+  declared version 11701000 and 194 tables. Earlier external repacks failed with CE-34878-0 for an unresolved reason. The successful Apollo procedure preserves the compressed mod regulation while replacing its embedded save allocation; see [APOLLO-END-TO-END.md](APOLLO-END-TO-END.md).
 
 ## Havok HKX (behavior, animations, nested weapon animations)
 
@@ -45,8 +45,8 @@ row as true for those files only.
 ## FLVER (models)
 
 - Seen as little endian, version 0x2001A on both platforms; kept unchanged for the
-  tested weapon. Material references (`.matxml`, `.mtd`) must exist in the PS4
-  material catalogue.
+  initial tested weapon. Material references (`.matxml`, `.mtd`) must exist in the PS4
+  material catalogue. Later rigid-mesh fixes for Bloodstarved/Tachikaze show that matching FLVER versions do not guarantee every mesh is compatible.
 
 ## Reference sources (read, not run)
 

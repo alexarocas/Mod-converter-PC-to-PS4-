@@ -30,14 +30,12 @@
   until the console was updated.
 - [Inference] Playing online with modified files can lead to account penalties. Keep
   the game offline while modded files are active.
-- Use a secondary account for tests. The save stores regulation data (see workflow),
-  so deleting saves is part of testing.
+- Prefer a secondary account/save for initial tests. Elden Ring PS4 also has an existing-save Apollo procedure: export, preserve verified encrypted and decrypted backups, build and verify a local candidate, then explicitly authorize its import. Importing changes the live save. Deleting saves is not required. A rollback restores the backup state and can discard later progress.
 
 ## Third-party tools
 
 Ask the user before installing or running any third-party binary. In the original
-project the only binary approved to run was the Oodle DLL, solely to compress and
-decompress game containers. Other tools (HKLib, DrSwizzler, Havok Content Tools) were
+project the only third-party PC format-processing binary approved to load was the Oodle DLL, solely to compress and decompress game containers. Apollo was separately used on the console for save export/import; Node.js and PowerShell ran the local scripts. Other tools (HKLib, DrSwizzler, Havok Content Tools) were
 studied from source or statically, not run. Tools that are documentation-only for you
 (for example WitchyBND or Smithbox/SoulsFormatsNEXT source) can be read to learn the
 formats.

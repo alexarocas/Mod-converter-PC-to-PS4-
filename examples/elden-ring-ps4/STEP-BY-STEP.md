@@ -1,6 +1,6 @@
 # Porting an Elden Ring PC moveset mod to PS4: step by step
 
-Draft, 2026-10-17. Written from one real port (Clever's Moveset Modpack 26.1 on a
+Updated 2026-10-18. Written from one real port (Clever's Moveset Modpack 26.1 on a
 base/Slim PS4, system software 13.52, Elden Ring app 01.25 / game 1.17.1).
 
 Each step is marked:
@@ -21,7 +21,7 @@ payload or firmware, and does not provide any game or mod file.
 2. **You need a console that already runs a homebrew environment with plugin support
    and a file-redirection plugin.** The tested setup used GoldHEN with the AFR plugin.
    Setting that up is outside this guide and is your own responsibility.
-3. **Use a second account.** Keep encrypted and decrypted backups; existing saves can be preserved with Apollo.
+3. **Choose the save route.** Prefer a separate test account/save. To modify an existing save through Apollo, preserve verified encrypted/decrypted backups and explicitly authorize import; that import changes live save data.
 4. **Turn off automatic updates and keep the game offline.** A game update can arrive
    that needs newer system software and stop the game from launching.
 5. **Tools on the PC:** Node.js, curl (comes with Git for Windows) and REA (Reverse
@@ -52,7 +52,7 @@ native code and cannot be ported this way. A data-only mod contains things like
 
 1. Copy the mod's `regulation.bin` **exactly as downloaded** to the AFR folder.
 2. Use a separate test account, or preserve the existing save with the Apollo procedure linked below.
-3. Start the game offline and create a character.
+3. On the isolated test route, start offline and create a test character. On the Apollo route, load the existing character after the verified import.
 4. Check something only the mod changes (for this mod: the Samurai class started at
    level 12 with 18 Dexterity).
 
@@ -90,7 +90,7 @@ runs and plays animations, including the mod's new ones.
 crashes on one specific attack or in one specific place, suspect this first and
 write down exactly what you were doing.
 
-## Step 8. Convert weapon models ✅ (one weapon so far)
+## Step 8. Convert weapon models (asset-specific validation)
 
 If a weapon is invisible, its model file is probably missing on PS4.
 
@@ -100,7 +100,7 @@ If a weapon is invisible, its model file is probably missing on PS4.
 3. Textures must be converted: PS4 uses a different texture header and a swizzled
    pixel layout. Test your converter on PS4 original textures first: converting them
    back and forth must give identical bytes.
-4. Models were kept as-is. Check the material names they use exist on PS4.
+4. The first tested model worked unchanged, but later Bloodstarved/Tachikaze rigid meshes needed layout fixes. Inspect each mesh and its material references; a matching format version does not establish compatibility.
 5. Convert the small HKX files like step 6.
 6. Repack (KRAK level 7), upload both files, test.
 
@@ -108,8 +108,7 @@ Result: the weapon was visible and usable.
 
 ## Step 9. Everything else ⚠️
 
-Not verified yet: weapons with cloth, visual effects (`sfx`), menu textures, item
-text (`msg`), the player model (`c0000.chrbnd.dcx`), long play sessions and every area.
+Later batches converted/deployed SFX, menu textures, item text and the player model. That does not validate every effect or resource. Cloth behavior, full move coverage, every area and long-term stability remain incompletely tested.
 
 ⚠️ Others report converting Havok files with Havok Content Tools 2018; that route was
 not tested here.
@@ -130,7 +129,6 @@ not tested here.
 - Do not play online with modified files.
 - Do not apply a 60 FPS patch made for another game version.
 
+## Current gameplay limits
 
-## Updated save-preserving procedure (2026-10-18)
-
-Read [APOLLO-END-TO-END.md](APOLLO-END-TO-END.md) for the current procedure. Deleting saves is not required. Earlier repack failures do not prove universal incompatibility. Compare source-version losses separately from conversion errors; Marais combo follow-ups remain unresolved.
+The [end-to-end Apollo guide](APOLLO-END-TO-END.md) records the current save procedure and test results. Lightblades and Tachikaze R2 were reported working after later TAE recovery. Marais follow-ups remain unresolved despite sufficient FP. Moonveil's original-model fallback remains untested. The included historical conversion scripts do not automatically apply those later recovery/mesh fixes.

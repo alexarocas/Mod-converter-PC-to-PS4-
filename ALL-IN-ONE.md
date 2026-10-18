@@ -1,5 +1,6 @@
 # PC-to-console mod investigation: collected documentation
-Updated 2026-10-18. Source paths below are relative to the repository root; use those source files for relative links. Scripts are distributed separately.
+
+Updated 2026-10-18. Generated from the source documents listed below. Source paths are relative to the repository root; use source files for relative links. Scripts are distributed separately.
 
 ---
 Source: README.md
@@ -30,8 +31,7 @@ A workflow for investigating and porting data-only PC mods to console, with an E
 
 ## What is not included
 
-No game files, no mod files, no converted files, no proprietary DLLs, no exploits,
-payloads or firmware, and no links to them.
+No game files, mod assets, converted assets, personal saves or proprietary DLLs are distributed. The repository also excludes exploits, payloads and firmware. Links to source references and tool documentation are not downloads of those excluded files.
 
 ## Credits
 
@@ -55,16 +55,14 @@ For an assistant with directory-based skills, install the `pc-to-console-mod-por
 
 The repository distributes individual source files. There is no bundled ZIP to maintain.
 
-
-
 ---
 Source: AI-START-HERE.md
 
 # AI: START HERE
 
 You are an AI assistant. A person has given you this package so you can help them port
-a **PC game mod to a console**. It can guide investigations of other games, but has only been tested on
-only one (Elden Ring → PS4, in `examples/`). Assume you know nothing else about this
+a **PC game mod to a console**. The workflow can guide investigations of other games, but has only been tested on
+one (Elden Ring → PS4, in `examples/`). Assume you know nothing else about this
 project, and that the person may be a beginner, may not speak English, and may be on a
 slow connection.
 
@@ -78,14 +76,13 @@ slow connection.
 6. `pc-to-console-mod-port/references/file-transfer.md` (PC ↔ console)
 7. If the game is **Elden Ring on PS4**: `examples/elden-ring-ps4/CASE-STUDY.md`,
    `workflow.md`, `ftp-and-afr.md`, `formats.md` and `tools/README.md`. You can follow
-   that example directly.
+   that example as a partly validated case study, and read `APOLLO-END-TO-END.md` before any save operation. Check the installed versions and recorded limitations.
    For any other game: read the example anyway, to see the method applied, but do not
    copy its formats, paths or results without checking them on the new game.
 
 `QUICK-GUIDE.md` is the short version for people; show it at the start.
 
-If the package seems incomplete, tell the person which files are missing and ask for
-the whole ZIP. Do not fill gaps from memory.
+If files are missing, identify them and obtain the complete repository checkout or the missing source files. This repository is distributed as individual files, not a maintained ZIP. Do not fill gaps from memory.
 
 ## 1. How to talk to the person
 
@@ -99,7 +96,7 @@ the whole ZIP. Do not fill gaps from memory.
 
 ## 2. Things you must refuse
 
-- Sharing, uploading or linking game files, mod files or converted files.
+- Publicly redistributing game files, mod files or converted files. Transfers between the user's own PC and console are part of the authorized workflow and are not public redistribution.
 - Giving, linking or searching for exploits, payloads, exploit sites or unofficial
   firmware. **The console's homebrew environment is a prerequisite.** If it is not
   installed, tell the person to install it first by following the official project's
@@ -123,12 +120,12 @@ the whole ZIP. Do not fill gaps from memory.
    targets?
 6. A PC (Windows was used in the example) with Node.js? An AI client that can use MCP
    tools (for REA)?
-7. A test account or test save?
+7. A separate test account/save, or an explicit request to preserve and modify an existing Elden Ring PS4 save through Apollo? For the latter, verify encrypted and decrypted backups and explain that importing the candidate replaces live save data.
 
 Summarise the answers and ask the person to confirm.
 
 **Gate A:** data-only mod, permission, homebrew running with transfer + redirection, a
-PC, a test account.
+PC, and an agreed save strategy: an isolated test save, or an authorized existing-save procedure with verified backups.
 
 ### Phase B: Safety and connection
 
@@ -143,8 +140,7 @@ PC, a test account.
 ### Phase C: Tools on the PC
 
 - Node.js from its official site.
-- REA, following `rea.md`: doctor, dry-run, show changes, "yes", setup, restart. If the
-  AI client cannot use MCP, continue but keep every claim about binaries `[Unverified]`.
+- Use format readers and source references for supported game-data formats. If executable or library inspection is needed, set up REA following `rea.md`. Missing MCP access does not invalidate independently checked parser results; label only claims that lack evidence as `[Unverified]`.
 
 ### Phase D: Inventory and originals (methodology phases 1–2)
 
@@ -153,15 +149,15 @@ PC, a test account.
 
 ### Phase E: Analyse and cross (methodology phase 3)
 
-- With REA, analyse each mod file and its console original; build the comparison table
+- Using format readers and REA where appropriate, analyse each mod file and its console original; build the comparison table
   (container, compression, encryption, version, byte order, layout, platform encoding,
   scripts). Decide per file: as-is / repack only / convert / not portable.
 - Show the person a plain summary of the decision per file type.
 
 ### Phase F: Cheapest proof (methodology phase 4)
 
-Load one untouched mod file through redirection and check a mod-only change.
-**Gate F:** visible on the console. If not, stop and report.
+Load a compatible untouched mod file through redirection and check a mod-only change. For Elden Ring, distinguish an isolated test save from the Apollo existing-save route: the embedded regulation may affect what loads. Diagnose the active data source before attributing a failed test to conversion.
+**Gate F:** a mod-only change is demonstrated, or the missing prerequisite is documented before proceeding.
 
 ### Phase G: Convert, verify, deploy (methodology phases 5–8)
 
@@ -177,15 +173,12 @@ On a crash: what were they doing, which batch, which error code; roll back.
 
 For Elden Ring save preservation, read examples/elden-ring-ps4/APOLLO-END-TO-END.md before editing or resetting saves. Use version-aware PARAM definitions and compare previous/current mod sources before attributing failures to conversion.
 
-
 ---
 Source: QUICK-GUIDE.md
 
 # Quick guide (for people)
 
-**What this is:** a method to play a PC game mod on a console, with an AI helping you
-step by step. It was proven once (Elden Ring on PS4). For other games it may work or
-not: you and your AI find out by testing.
+**What this is:** a workflow for investigating and porting data-only PC mods to console, with a partly validated Elden Ring → PS4 case study. Other games need format research and new tools; this is not a universal converter.
 
 ## What you need
 
@@ -194,9 +187,8 @@ not: you and your AI find out by testing.
 - A PC on the same Wi-Fi or router as the console.
 - The game on your console, and the PC mod you want (data only: no `.dll` or `.exe`).
 - **Permission from the mod's author.**
-- An AI assistant that can run tools on your PC, with **REA (Reverse Engineer
-  Anything)**. Your AI will help you install it. Plus Node.js.
-- A second account or save for testing. Your real save is not touched.
+- An AI assistant that can run local tools, plus Node.js for the included scripts. REA can help inspect executables and libraries when needed; game-data readers do not require it.
+- A save strategy: use a separate test account/save for initial tests, or explicitly choose the existing-save Apollo route for Elden Ring PS4. That route modifies the live save when you import the candidate. Preserve verified encrypted and decrypted backups first; a backup does not eliminate the risk of losing progress.
 - Patience.
 
 ## How it goes
@@ -205,12 +197,12 @@ not: you and your AI find out by testing.
    "Read AI-START-HERE.md and follow it."
 2. **The AI asks you questions** about your console, game and mod.
 3. **You connect the PC to the console** over Wi-Fi. The AI tells you where to click.
-4. **The AI studies the mod's files and your console's files** (with REA) and tells you
+4. **The AI studies the mod's files and your console's files**, using format readers and REA where appropriate, and tells you
    which files can be copied as they are, which must be converted, and which cannot work.
-5. **First test:** one mod file copied as it is. If the game does not change, stop.
+5. **First test:** use one compatible, untouched mod file if available. Verify redirection and the active data source. For Elden Ring, an existing save can retain regulation data; choose the test-save or Apollo route before concluding that redirection failed.
 6. **The AI converts the rest on your PC**, and checks each result before you copy it.
 7. **You copy in small groups** and test after each one. The AI always asks first.
-8. **If the game crashes**, tell the AI exactly what you were doing. You can undo.
+8. **If the game crashes**, record the exact action and error. Restore verified asset/save backups as appropriate; restoring an older save discards progress made after that backup.
 
 ## Important
 
@@ -219,14 +211,13 @@ not: you and your AI find out by testing.
 - Do not share game files or mod files. Everyone converts their own.
 - Use at your own risk.
 
-**Elden Ring on PS4?** There is a full worked example in `examples/elden-ring-ps4/`.
+**Elden Ring on PS4?** There is a worked example with explicit validation limits in `examples/elden-ring-ps4/`.
 
 
 For the complete PS4 IP/FTP/Apollo procedure and existing-save preservation, read [the end-to-end guide](examples/elden-ring-ps4/APOLLO-END-TO-END.md).
 
-
 ---
-Source: examples\elden-ring-ps4\APOLLO-END-TO-END.md
+Source: examples/elden-ring-ps4/APOLLO-END-TO-END.md
 
 # Elden Ring PS4: connection, mod deployment, Apollo and saved regulation
 
@@ -369,15 +360,13 @@ Reported gameplay after later TAE recovery: single/dual Lightblades and Tachikaz
 
 Never edit your only copy. This procedure does not require deleting characters.
 
-
-
 ---
-Source: examples\elden-ring-ps4\CASE-STUDY.md
+Source: examples/elden-ring-ps4/CASE-STUDY.md
 
 # Case study: Elden Ring PC mod → PS4
 
 Verified on: PS4 base/Slim, system software 13.52, GoldHEN 2.4b18.x, AFR plugin 1.210,
-Elden Ring app 01.25 (game 1.17.1), Clever's Moveset Modpack 26.1. Last updated 2026-10-17.
+Elden Ring app 01.25 (game 1.17.1). Resources originated from Clever's Moveset Modpack 26.1, with later 26.0 TAE recoveries. Identify the regulation by hash: project labels were inconsistent. Last updated 2026-10-18.
 
 
 This case study describes a workflow that was tested on one console with one mod. It is a
@@ -414,7 +403,7 @@ permission. This skill contains none of the mod's files.
    user to obtain the author's permission before converting anything, and record it.
 4. **Every write to the console needs an explicit "yes" from the user for that
    specific batch.** Explain exactly which files will be uploaded and where, first.
-5. **Never touch the user's main save.** Test on a secondary PSN/local account.
+5. **Preserve backups and agree on the save route.** Prefer an isolated test save. The authorized Apollo route modifies an existing live save at import; verify encrypted/decrypted backups and the candidate first.
 6. **Third-party binaries only with explicit user consent.** Name the binary, its
    source and its SHA256, and wait for approval.
 
@@ -432,35 +421,171 @@ permission. This skill contains none of the mod's files.
 - Upload in small batches (one weapon or one asset type at a time) so a crash can be
   attributed to a file.
 
-## Quick status of each asset type (as of 2026-10-17)
+## Asset status (updated 2026-10-18; partial validation)
 
 | Asset | PC file usable as-is on PS4? | Status |
 |---|---|---|
 | `regulation.bin` (mod's own, untouched) | Yes | Verified (existing-save Apollo route available; see workflow) |
-| `regulation.bin` repacked by us | No, error CE-34878-0 | Tested repacks failed; cause unresolved |
+| Experimental external `regulation.bin` repacks | Tested candidates failed with CE-34878-0 | Cause unresolved; distinct from the successful embedded-regulation Apollo procedure |
 | `action/script/c0000.hks` (plain text) | Yes | Verified boots; not every branch tested |
 | `chr/c0000.behbnd.dcx` | No, crashes | Verified: needs Havok layout conversion |
 | `chr/c0000*.anibnd.dcx` | No | Verified: converted versions play animations |
 | `parts/wp_a_*.partsbnd.dcx` | No | Verified for one weapon after TPF + nested HKX conversion |
-| Cloth (`hcl*` classes), SFX, menu TPF, `c0000.chrbnd`, `msgbnd` | Unknown | Not verified |
+| SFX, menu TPF, `c0000.chrbnd`, `msgbnd` | Asset-specific processing | Converted/deployed in later batches; complete visual/effect correctness remains unverified |
+| Cloth (`hcl*` classes) | No general claim | Not fully validated |
 
 ## When to stop
 
 - The homebrew environment or file redirection cannot be confirmed by a trivial test.
-- The untouched regulation of the mod does not load after the save reset.
+- The active regulation or redirection cannot be established after checking the chosen test-save or Apollo route. Do not delete a save as a diagnostic default.
 - The mod author refuses permission.
 - The user's game version differs from the mod's target version and no matching
   base files are available for comparison.
 
+## Current gameplay limits
 
-## Updated save-preserving procedure (2026-10-18)
-
-Read [APOLLO-END-TO-END.md](APOLLO-END-TO-END.md) for the current procedure. Deleting saves is not required. Earlier repack failures do not prove universal incompatibility. Compare source-version losses separately from conversion errors; Marais combo follow-ups remain unresolved.
-
-
+The [end-to-end Apollo guide](APOLLO-END-TO-END.md) records the current save procedure and test results. Lightblades and Tachikaze R2 were reported working after later TAE recovery. Marais follow-ups remain unresolved despite sufficient FP. Moonveil's original-model fallback remains untested. The included historical conversion scripts do not automatically apply those later recovery/mesh fixes.
 
 ---
-Source: examples\elden-ring-ps4\formats.md
+Source: examples/elden-ring-ps4/STEP-BY-STEP.md
+
+# Porting an Elden Ring PC moveset mod to PS4: step by step
+
+Updated 2026-10-18. Written from one real port (Clever's Moveset Modpack 26.1 on a
+base/Slim PS4, system software 13.52, Elden Ring app 01.25 / game 1.17.1).
+
+Each step is marked:
+
+- ✅ **Verified**: done on the console and confirmed working.
+- ❌ **Verified failure**: done and confirmed **not** to work.
+- ⚠️ **Unverified**: planned, inferred or reported by someone else.
+
+This guide does not explain how to jailbreak a console, does not link any exploit,
+payload or firmware, and does not provide any game or mod file.
+
+---
+
+## Before you start
+
+1. **Ask the mod author for permission.** Many authors forbid modifying their files.
+   Even with permission, never share the converted files: everyone converts their own.
+2. **You need a console that already runs a homebrew environment with plugin support
+   and a file-redirection plugin.** The tested setup used GoldHEN with the AFR plugin.
+   Setting that up is outside this guide and is your own responsibility.
+3. **Choose the save route.** Prefer a separate test account/save. To modify an existing save through Apollo, preserve verified encrypted/decrypted backups and explicitly authorize import; that import changes live save data.
+4. **Turn off automatic updates and keep the game offline.** A game update can arrive
+   that needs newer system software and stop the game from launching.
+5. **Tools on the PC:** Node.js, curl (comes with Git for Windows) and REA (Reverse
+   Engineer Anything, npm package `rea-agents`), which was used to inspect a serializer library related to the
+   game's Havok format without running third-party binaries. See
+   `../../pc-to-console-mod-port/references/rea.md`.
+6. **Write down your versions:** console model, system software, game app version
+   (APP_VER), calibration version, DLC owned, mod version and the SHA256 of the mod ZIP.
+
+## Step 1. Check the mod is data-only ✅
+
+Open the mod ZIP and list its files. If it contains `.dll` or `.exe`, it relies on PC
+native code and cannot be ported this way. A data-only mod contains things like
+`regulation.bin`, `.hks`, `.behbnd.dcx`, `.anibnd.dcx`, `.partsbnd.dcx`.
+
+## Step 2. Check file redirection works ✅
+
+1. Enable the redirection plugin for the game. Tested: `afr.prx` in
+   `/data/GoldHEN/plugins/`, with a `[CUSA18723]` section in
+   `/data/GoldHEN/plugins.ini` (use your own title ID).
+2. Files go in `/data/GoldHEN/AFR/<TITLE_ID>/` with the same relative path as in the
+   game, for example `/data/GoldHEN/AFR/CUSA18723/regulation.bin`.
+3. Copy files with the homebrew FTP server. Large files are slow (about 148 KB/s
+   observed); give each transfer at least 10 minutes.
+4. After each upload, download the file back and compare its SHA256 with your copy.
+
+## Step 3. Load the mod's regulation ✅
+
+1. Copy the mod's `regulation.bin` **exactly as downloaded** to the AFR folder.
+2. Use a separate test account, or preserve the existing save with the Apollo procedure linked below.
+3. On the isolated test route, start offline and create a test character. On the Apollo route, load the existing character after the verified import.
+4. Check something only the mod changes (for this mod: the Samurai class started at
+   level 12 with 18 Dexterity).
+
+Earlier experimental repacks of `regulation.bin` gave error
+CE-34878-0.
+
+## Step 4. Add the character script ✅
+
+Copy `action/script/c0000.hks` as it is (plain text). The game boots with it.
+⚠️ Booting does not prove all of the mod's script runs. Test a move that only the mod has.
+
+## Step 5. Dump the PS4 originals ✅
+
+With the game running, copy from the console the original files you will replace
+(behavior, the three player anibnds, each weapon's partsbnd, the material catalogue).
+They are under `/mnt/sandbox/pfsmnt/<TITLE_ID>-patch0/` or `<TITLE_ID>-app0/`.
+Re-dump after every game update.
+
+## Step 6. Convert the behavior file ✅ / ❌
+
+❌ The PC `chr/c0000.behbnd.dcx` copied as-is crashes the PS4 game.
+
+✅ A converted version works. Both platforms use the same Havok version, but some
+internal structures have different sizes. The conversion rewrites each object into
+the PS4 layout taken from the PS4 original, then repacks with Oodle (KRAK level 7).
+Always check the result by converting it back and comparing.
+
+## Step 7. Convert the player animations ✅
+
+Apply the same conversion to the three player anibnds (`c0000.anibnd.dcx`,
+`c0000_a00_hi.anibnd.dcx`, `c0000_a6x.anibnd.dcx`). Result: the character loads,
+runs and plays animations, including the mod's new ones.
+
+⚠️ Some Havok classes had no PS4 example and their layout was inferred. If the game
+crashes on one specific attack or in one specific place, suspect this first and
+write down exactly what you were doing.
+
+## Step 8. Convert weapon models (asset-specific validation)
+
+If a weapon is invisible, its model file is probably missing on PS4.
+
+1. Find the weapon's model ID in the regulation and the matching
+   `parts/wp_a_XXXX.partsbnd.dcx` (and `_l`) in the mod.
+2. Inside: textures (TPF), models (FLVER) and small animation files (HKX).
+3. Textures must be converted: PS4 uses a different texture header and a swizzled
+   pixel layout. Test your converter on PS4 original textures first: converting them
+   back and forth must give identical bytes.
+4. The first tested model worked unchanged, but later Bloodstarved/Tachikaze rigid meshes needed layout fixes. Inspect each mesh and its material references; a matching format version does not establish compatibility.
+5. Convert the small HKX files like step 6.
+6. Repack (KRAK level 7), upload both files, test.
+
+Result: the weapon was visible and usable.
+
+## Step 9. Everything else ⚠️
+
+Later batches converted/deployed SFX, menu textures, item text and the player model. That does not validate every effect or resource. Cloth behavior, full move coverage, every area and long-term stability remain incompletely tested.
+
+⚠️ Others report converting Havok files with Havok Content Tools 2018; that route was
+not tested here.
+
+⚠️ Very large textures may cause memory problems on a base or Slim PS4.
+
+## Step 10. Roll out safely ✅
+
+- One batch at a time, easiest first.
+- Close the game before replacing files.
+- Keep the previous file renamed (for example `.off`) so you can undo.
+- For each batch write down: files, hashes, test done, result.
+
+## What not to do
+
+- Do not share game files, mod files or converted files.
+- Do not install firmware from unofficial sources.
+- Do not play online with modified files.
+- Do not apply a 60 FPS patch made for another game version.
+
+## Current gameplay limits
+
+The [end-to-end Apollo guide](APOLLO-END-TO-END.md) records the current save procedure and test results. Lightblades and Tachikaze R2 were reported working after later TAE recovery. Marais follow-ups remain unresolved despite sufficient FP. Moonveil's original-model fallback remains untested. The included historical conversion scripts do not automatically apply those later recovery/mesh fixes.
+
+---
+Source: examples/elden-ring-ps4/formats.md
 
 # Format notes (PC vs PS4), as observed
 
@@ -474,7 +599,7 @@ row as true for those files only.
 - BND4: archive inside most `.dcx`. When repacking, keep member order, names, IDs,
   flags and the hash table coherent; re-read every member after writing.
 - `regulation.bin`: encrypted, DCX/ZSTD → BND4 of PARAM tables. The mod's file
-  declared version 11701000 and 194 tables. Do not repack (CE-34878-0).
+  declared version 11701000 and 194 tables. Earlier external repacks failed with CE-34878-0 for an unresolved reason. The successful Apollo procedure preserves the compressed mod regulation while replacing its embedded save allocation; see [APOLLO-END-TO-END.md](APOLLO-END-TO-END.md).
 
 ## Havok HKX (behavior, animations, nested weapon animations)
 
@@ -509,8 +634,8 @@ row as true for those files only.
 ## FLVER (models)
 
 - Seen as little endian, version 0x2001A on both platforms; kept unchanged for the
-  tested weapon. Material references (`.matxml`, `.mtd`) must exist in the PS4
-  material catalogue.
+  initial tested weapon. Material references (`.matxml`, `.mtd`) must exist in the PS4
+  material catalogue. Later rigid-mesh fixes for Bloodstarved/Tachikaze show that matching FLVER versions do not guarantee every mesh is compatible.
 
 ## Reference sources (read, not run)
 
@@ -518,9 +643,8 @@ row as true for those files only.
 - WitchyBND and Smithbox documentation.
 - DrSwizzler source (PS4 swizzle/deswizzle).
 
-
 ---
-Source: examples\elden-ring-ps4\ftp-and-afr.md
+Source: examples/elden-ring-ps4/ftp-and-afr.md
 
 # Connecting the PC to the PS4 (FTP) and enabling AFR
 
@@ -615,152 +739,8 @@ from `/data/GoldHEN/AFR/<TITLE_ID>/` instead of its own.
 To undo: rename the replaced file on the console (for example add `.off`) or remove the
 section from `plugins.ini`.
 
-
 ---
-Source: examples\elden-ring-ps4\STEP-BY-STEP.md
-
-# Porting an Elden Ring PC moveset mod to PS4: step by step
-
-Draft, 2026-10-17. Written from one real port (Clever's Moveset Modpack 26.1 on a
-base/Slim PS4, system software 13.52, Elden Ring app 01.25 / game 1.17.1).
-
-Each step is marked:
-
-- ✅ **Verified**: done on the console and confirmed working.
-- ❌ **Verified failure**: done and confirmed **not** to work.
-- ⚠️ **Unverified**: planned, inferred or reported by someone else.
-
-This guide does not explain how to jailbreak a console, does not link any exploit,
-payload or firmware, and does not provide any game or mod file.
-
----
-
-## Before you start
-
-1. **Ask the mod author for permission.** Many authors forbid modifying their files.
-   Even with permission, never share the converted files: everyone converts their own.
-2. **You need a console that already runs a homebrew environment with plugin support
-   and a file-redirection plugin.** The tested setup used GoldHEN with the AFR plugin.
-   Setting that up is outside this guide and is your own responsibility.
-3. **Use a second account.** Keep encrypted and decrypted backups; existing saves can be preserved with Apollo.
-4. **Turn off automatic updates and keep the game offline.** A game update can arrive
-   that needs newer system software and stop the game from launching.
-5. **Tools on the PC:** Node.js, curl (comes with Git for Windows) and REA (Reverse
-   Engineer Anything, npm package `rea-agents`), which was used to inspect a serializer library related to the
-   game's Havok format without running third-party binaries. See
-   `../../pc-to-console-mod-port/references/rea.md`.
-6. **Write down your versions:** console model, system software, game app version
-   (APP_VER), calibration version, DLC owned, mod version and the SHA256 of the mod ZIP.
-
-## Step 1. Check the mod is data-only ✅
-
-Open the mod ZIP and list its files. If it contains `.dll` or `.exe`, it relies on PC
-native code and cannot be ported this way. A data-only mod contains things like
-`regulation.bin`, `.hks`, `.behbnd.dcx`, `.anibnd.dcx`, `.partsbnd.dcx`.
-
-## Step 2. Check file redirection works ✅
-
-1. Enable the redirection plugin for the game. Tested: `afr.prx` in
-   `/data/GoldHEN/plugins/`, with a `[CUSA18723]` section in
-   `/data/GoldHEN/plugins.ini` (use your own title ID).
-2. Files go in `/data/GoldHEN/AFR/<TITLE_ID>/` with the same relative path as in the
-   game, for example `/data/GoldHEN/AFR/CUSA18723/regulation.bin`.
-3. Copy files with the homebrew FTP server. Large files are slow (about 148 KB/s
-   observed); give each transfer at least 10 minutes.
-4. After each upload, download the file back and compare its SHA256 with your copy.
-
-## Step 3. Load the mod's regulation ✅
-
-1. Copy the mod's `regulation.bin` **exactly as downloaded** to the AFR folder.
-2. Use a separate test account, or preserve the existing save with the Apollo procedure linked below.
-3. Start the game offline and create a character.
-4. Check something only the mod changes (for this mod: the Samurai class started at
-   level 12 with 18 Dexterity).
-
-Earlier experimental repacks of `regulation.bin` gave error
-CE-34878-0.
-
-## Step 4. Add the character script ✅
-
-Copy `action/script/c0000.hks` as it is (plain text). The game boots with it.
-⚠️ Booting does not prove all of the mod's script runs. Test a move that only the mod has.
-
-## Step 5. Dump the PS4 originals ✅
-
-With the game running, copy from the console the original files you will replace
-(behavior, the three player anibnds, each weapon's partsbnd, the material catalogue).
-They are under `/mnt/sandbox/pfsmnt/<TITLE_ID>-patch0/` or `<TITLE_ID>-app0/`.
-Re-dump after every game update.
-
-## Step 6. Convert the behavior file ✅ / ❌
-
-❌ The PC `chr/c0000.behbnd.dcx` copied as-is crashes the PS4 game.
-
-✅ A converted version works. Both platforms use the same Havok version, but some
-internal structures have different sizes. The conversion rewrites each object into
-the PS4 layout taken from the PS4 original, then repacks with Oodle (KRAK level 7).
-Always check the result by converting it back and comparing.
-
-## Step 7. Convert the player animations ✅
-
-Apply the same conversion to the three player anibnds (`c0000.anibnd.dcx`,
-`c0000_a00_hi.anibnd.dcx`, `c0000_a6x.anibnd.dcx`). Result: the character loads,
-runs and plays animations, including the mod's new ones.
-
-⚠️ Some Havok classes had no PS4 example and their layout was inferred. If the game
-crashes on one specific attack or in one specific place, suspect this first and
-write down exactly what you were doing.
-
-## Step 8. Convert weapon models ✅ (one weapon so far)
-
-If a weapon is invisible, its model file is probably missing on PS4.
-
-1. Find the weapon's model ID in the regulation and the matching
-   `parts/wp_a_XXXX.partsbnd.dcx` (and `_l`) in the mod.
-2. Inside: textures (TPF), models (FLVER) and small animation files (HKX).
-3. Textures must be converted: PS4 uses a different texture header and a swizzled
-   pixel layout. Test your converter on PS4 original textures first: converting them
-   back and forth must give identical bytes.
-4. Models were kept as-is. Check the material names they use exist on PS4.
-5. Convert the small HKX files like step 6.
-6. Repack (KRAK level 7), upload both files, test.
-
-Result: the weapon was visible and usable.
-
-## Step 9. Everything else ⚠️
-
-Not verified yet: weapons with cloth, visual effects (`sfx`), menu textures, item
-text (`msg`), the player model (`c0000.chrbnd.dcx`), long play sessions and every area.
-
-⚠️ Others report converting Havok files with Havok Content Tools 2018; that route was
-not tested here.
-
-⚠️ Very large textures may cause memory problems on a base or Slim PS4.
-
-## Step 10. Roll out safely ✅
-
-- One batch at a time, easiest first.
-- Close the game before replacing files.
-- Keep the previous file renamed (for example `.off`) so you can undo.
-- For each batch write down: files, hashes, test done, result.
-
-## What not to do
-
-- Do not share game files, mod files or converted files.
-- Do not install firmware from unofficial sources.
-- Do not play online with modified files.
-- Do not apply a 60 FPS patch made for another game version.
-
-
-## Updated save-preserving procedure (2026-10-18)
-
-Read [APOLLO-END-TO-END.md](APOLLO-END-TO-END.md) for the current procedure. Deleting saves is not required. Earlier repack failures do not prove universal incompatibility. Compare source-version losses separately from conversion errors; Marais combo follow-ups remain unresolved.
-
-
-
-
----
-Source: examples\elden-ring-ps4\tools\README.md
+Source: examples/elden-ring-ps4/tools/README.md
 
 # Research scripts (experimental)
 
@@ -784,7 +764,7 @@ analysis with REA (Reverse Engineer Anything); see
 
 ## Expected layout
 
-Run every script from the project root (the folder that contains `analysis-26.1/`).
+For the historical conversion scripts, use `examples/elden-ring-ps4/tools/` as the research workspace root: it contains `analysis-26.1/`. Inspect each script's expected inputs before running it. The newer `build-save-regulation.cjs` accepts explicit paths and is invoked from the repository root in the Apollo guide.
 
 ```
 analysis-26.0/analyze-mod.cjs        DCX/BND4 reader (shared helper)
@@ -815,7 +795,7 @@ Status of each step (verified or not on a console) is in
 
 ## Licence
 
-Proposed: GPL-3.0. The format knowledge comes partly from reading SoulsFormatsNEXT and
+GPL-3.0; see `LICENSE`. The format knowledge comes partly from reading SoulsFormatsNEXT and
 WitchyBND, which are GPL-3.0. Texture swizzling was studied from DrSwizzler, which shows
 no licence file on GitHub. `ps4-texture-blocks.cjs` was compared with DrSwizzler's
 `PS4Swizzler.cs` on 2026-10-17: same generic technique (Morton order inside 8×8 tiles),
@@ -828,9 +808,8 @@ SHA256 of each file: `../tools-sha256.txt`.
 
 Run build-save-regulation.cjs with SAVE MOD OUTPUT SAVE_SHA256 MOD_SHA256 arguments. It supports only the observed PS4 layout, preserves character/profile bytes and refuses existing output. See [the complete Apollo guide](../APOLLO-END-TO-END.md).
 
-
 ---
-Source: examples\elden-ring-ps4\workflow.md
+Source: examples/elden-ring-ps4/workflow.md
 
 # Workflow
 
@@ -860,7 +839,7 @@ Ask the user, do not guess:
   `menu/**/*.tpf.dcx`, `msg/**/*.msgbnd.dcx`.
 - Record the DCX compression of each container (DFLT, ZSTD, KRAK). KRAK needs Oodle.
 - Read the declared regulation version (it is inside the decrypted BND4) and compare
-  it with the console's game version. A mismatch means the mod targets another patch.
+  it with the console regulation. Version labels alone do not establish compatibility: inspect the applicable schemas and changed data.
 
 ## 2. Prove file redirection works (Verified)
 
@@ -877,8 +856,7 @@ After every upload, download the file back and compare size and SHA256.
 ## 3. Load the mod's regulation (Verified)
 
 1. Put the mod's **untouched** `regulation.bin` in the AFR folder.
-2. Use a separate test account, or follow the Apollo procedure below to preserve an existing save. [Inference] The save carries its
-   own copy of the regulation, which is why an old save can hide the new file.
+2. Choose either an isolated test save or the [Apollo existing-save procedure](APOLLO-END-TO-END.md). The latter modifies the live save at import and requires verified backups. The embedded regulation was extracted and inspected; its exact runtime priority remains inferred.
 3. Start the game with no network connection.
 4. Check a value that only the mod changes. In the original project: the Samurai
    starting class showed level 12 / Dexterity 18 and calibration 1.17.
@@ -930,8 +908,7 @@ A weapon is invisible if its model is missing on PS4 (check `equipModelId` of th
 weapon in the regulation against the console's `parts/`). For the tested weapon the
 partsbnd held one TPF, three FLVER and two nested anibnds:
 
-- FLVER: PC and PS4 both little endian, version 0x2001A; kept as-is. [Unverified]
-  geometry/shader parameters were not fully audited.
+- FLVER: both used little endian version 0x2001A. The initial weapon worked without geometry edits, but later Bloodstarved/Tachikaze rigid-mesh fixes were needed. A matching version is not enough to establish compatibility.
 - Materials: check the referenced material names exist in the PS4
   `allmaterial.matbinbnd.dcx`.
 - TPF textures: must be converted (see `formats.md`). Validate the converter by
@@ -940,18 +917,17 @@ partsbnd held one TPF, three FLVER and two nested anibnds:
   not the player's.
 - Repack, KRAK level 7, decompress again and compare.
 
-Result on console: weapon visible and usable (user report "funciona!"). Not yet
+Result on console for the initial weapon: visible and usable (user report "works!"). Not yet
 checked: every attack, effect, area and long sessions.
 
 ## 9. Not verified yet
 
 - Weapons with cloth (`hcl*` Havok Cloth classes).
-- `sfx/*.ffxbnd.dcx` effects, `menu` textures, `c0000.chrbnd.dcx` (player mesh and
-  physics), `msgbnd` text files.
+- Full correctness of effects, menu textures, player mesh/physics and message files. These were converted/deployed in later batches; deployment does not validate every resource.
 - [Unverified] Discord report: Havok Content Tools 2018 "Standalone Filter Manager"
   with "Write to Platform → PlayStation" converts HKX; this was not tested.
 - [Inference] Very large textures (one was 2048×8192) may exceed memory on a base PS4.
-- 60 FPS patches exist only for older app versions; do not apply them to another one.
+- The examined 60 FPS patch listing did not match the tested application version. Do not apply a patch to a different version or treat that historical listing as a claim about all current patches.
 
 ## 10. Rollout
 
@@ -960,14 +936,101 @@ layouts, then cloth, then effects, menu, text, player chrbnd). Close the game be
 replacing files. For each batch record: files, hashes, user's "yes", the test done
 and the result, including the exact action that caused any crash.
 
+## Current gameplay limits
 
-## Updated save-preserving procedure (2026-10-18)
-
-Read [APOLLO-END-TO-END.md](APOLLO-END-TO-END.md) for the current procedure. Deleting saves is not required. Earlier repack failures do not prove universal incompatibility. Compare source-version losses separately from conversion errors; Marais combo follow-ups remain unresolved.
-
+The [end-to-end Apollo guide](APOLLO-END-TO-END.md) records the current save procedure and test results. Lightblades and Tachikaze R2 were reported working after later TAE recovery. Marais follow-ups remain unresolved despite sufficient FP. Moonveil's original-model fallback remains untested. The included historical conversion scripts do not automatically apply those later recovery/mesh fixes.
 
 ---
-Source: pc-to-console-mod-port\references\file-transfer.md
+Source: pc-to-console-mod-port/SKILL.md
+
+---
+name: pc-to-console-mod-port
+description: Guide an AI assistant through porting a data-only PC game mod to a console that already runs homebrew with file redirection, with Elden Ring-specific example scripts, using REA where appropriate to analyse binaries and cross the mod's files with the console game's own metadata, with verified and unverified steps kept apart.
+license: CC-BY-4.0
+metadata:
+  status: draft
+  last-updated: "2026-10-18"
+  worked-example: "examples/elden-ring-ps4 (Elden Ring PC mod → PS4, partly verified on console)"
+---
+
+# Investigating PC-to-console ports of data-only mods
+
+This skill is a **method**, not a recipe for one game. It was distilled from one real
+port (Elden Ring PC → PS4, see `../examples/elden-ring-ps4/`). Use that example to see
+the method applied; do not assume its formats, paths or results apply to another game.
+
+Read first: `references/safety-and-licensing.md`. Then `references/methodology.md`.
+
+## What you need
+
+| Need | Why |
+|---|---|
+| Format readers; REA when needed | Use validated readers for game data. REA can inspect executables and libraries when format rules require binary analysis. See `references/rea.md`. |
+| The mod's files and their hashes | Source of the changes. |
+| The console's original files for the **same game version** | Target layout ("metadata" of the console build). Dumped by the person from their own console. |
+| A homebrew environment with **file redirection** already working | To load replaced files without modifying the game install. Prerequisite; this skill does not cover installing it. |
+| A file transfer route (usually FTP) | See `references/file-transfer.md`. |
+| Ideally the vanilla PC files of the mod's game version | To compute what the mod changed (deltas). |
+| Node.js or another scripting runtime | To write converters and verifiers. |
+
+## The core idea
+
+```
+mod binary (PC)  ──analyse──►  structure of each file  ─┐
+                                                         ├──► cross ──► convert ──► verify ──► test on console
+console original ──analyse──►  console metadata/layout  ─┘
+          ▲                         ▲
+          └──── format readers ────┘  (REA can inspect libraries / executables when a
+                                        format rule requires binary-code analysis)
+```
+
+1. Analyse the mod's binary files: containers, compression, encryption, version
+   fields, internal type metadata.
+2. Analyse the console's originals of the same files the same way.
+3. Cross them: what is identical, what differs only in wrapper (compression,
+   platform byte), what differs in internal layout (field offsets, sizes,
+   alignment, pixel order, compiled vs text).
+4. Decide per file: **copy as-is**, **convert**, or **not portable**.
+5. Convert using the console original as the layout source, never by guessing.
+6. Verify locally (reverse conversion, graph comparison, re-read), then test on the
+   console in small batches.
+
+Use validated format readers for game-data inspection. REA can supplement steps 1–3 when a rule depends on executable or library behavior. Record evidence from either route; static analysis does not prove runtime behavior.
+
+## Hard limits (never break these)
+
+1. **No redistribution** of game files, mod files or converted files. Share only your
+   own scripts and documentation.
+2. **No exploits, payloads or unofficial firmware**, and no links to them. The homebrew
+   environment is a prerequisite the person sets up beforehand.
+3. **Mod author's permission** before modifying their files.
+4. **Explicit "yes" from the person before every write to the console**, per batch.
+5. **Choose and document the save route.** Prefer a separate account/save for initial experiments. An existing-save operation requires explicit authorization, verified encrypted/decrypted backups, a locally checked candidate and a rollback procedure. Importing with Apollo changes the live save; preserving character bytes during candidate generation does not guarantee every later gameplay result.
+6. **No third-party binary is run** without the person's approval (name, source,
+   SHA256). Prefer static analysis with REA over running a DLL "to see".
+
+## Evidence discipline
+
+- Label every unchecked claim: `[Inference]`, `[Speculation]`, `[Unverified]`. If you
+  cannot check something, say "I cannot verify this".
+- Identify files by SHA256 and size, never by version label alone.
+- "It boots" proves only that it boots. Design a test only the modded file can pass.
+- Keep originals untouched; keep the previous console file renamed so it can be undone.
+- One batch at a time so a crash points to a file.
+
+## When to stop
+
+- File redirection or the active data source cannot be established after checking the chosen save route. Some mods also require coordinated files rather than a single-file proof.
+- The mod contains native code (DLL/EXE/plugins) that the console cannot run.
+- The person's console game version differs from the mod's and no matching base
+  files are available.
+- The mod author refuses permission.
+
+
+For the complete Elden Ring connection-to-save workflow, read ../examples/elden-ring-ps4/APOLLO-END-TO-END.md. Included conversion scripts are specific to Elden Ring; other games need format research and new tooling.
+
+---
+Source: pc-to-console-mod-port/references/file-transfer.md
 
 # File transfer and redirection (generic)
 
@@ -999,13 +1062,12 @@ loader configuration file, download the current one and add to it, never overwri
 PS4 with GoldHEN (FTP on port 2121) and the AFR plugin:
 `../../examples/elden-ring-ps4/ftp-and-afr.md`.
 
-
 ---
-Source: pc-to-console-mod-port\references\methodology.md
+Source: pc-to-console-mod-port/references/methodology.md
 
 # Methodology
 
-Game-agnostic. Each phase ends with a gate. Lessons in boxes come from the Elden Ring
+An investigation workflow that may guide other games; the supplied converters are Elden Ring-specific. Each phase ends with a gate. Lessons in boxes come from the Elden Ring
 example and are marked with where they were verified; treat them as things to check,
 not as facts about your game.
 
@@ -1031,8 +1093,7 @@ Ask, do not guess:
 - For each data file record: extension, magic bytes, container type, compression,
   encryption, declared version.
 
-**REA here:** inventory and integrity of the archive; identify unknown magic bytes and
-containers; keep the evidence reference for each finding.
+Use validated archive/format readers to inventory files and verify integrity. Use REA for executable or library inspection when needed; record the evidence for each finding.
 
 ## Phase 2. Get the console's originals
 
@@ -1041,7 +1102,47 @@ containers; keep the evidence reference for each finding.
 - Some consoles only expose decrypted game files while the game runs; read from the
   mounted paths the homebrew environment offers.
 
-> Elden Ring/PS4: an untouched mod regulation loaded with a fresh test save. Later, an existing save was preserved through Apollo by replacing only its embedded regulation. Earlier external repacks failed; the cause remains unresolved. Do not require save deletion or infer universal repacking incompatibility from those tests. See the end-to-end Apollo guide in the worked example.
+> Elden Ring/PS4 (verified): originals were readable while the game ran, from the real
+> patch/app mounts; a "union" view listed files but failed to deliver some.
+
+## Phase 3. Analyse and cross (the core)
+
+For each file type, compare mod (PC) against console original:
+
+| Layer | Question | Typical outcome |
+|---|---|---|
+| Container | Same archive format? Same member names, IDs, order, hash tables? | Usually same; repack must stay coherent |
+| Compression | Same algorithm and level? | May differ; some need a proprietary library |
+| Encryption / signature | Same key? Is the file signed or checksummed? | Repacking may break it |
+| Version | Does the declared data version match the console game? | Compare schemas and content; a different version label alone does not establish incompatibility |
+| Byte order / pointer size | Little/big endian, 32/64-bit? | Must match target |
+| Internal layout | Same structure sizes, field offsets, alignment? | **Same SDK version does not imply same layout** |
+| Platform encoding | Textures (swizzle/tiling, header), audio, shaders | Usually platform-specific |
+| Scripts | Text vs compiled bytecode on console? | Console may accept text, or not |
+
+How to cross:
+- Use the console original as the source of truth for layout (its own type metadata,
+  table definitions, headers).
+- Match types/records by identity (name plus field list), not by position.
+- Where a format rule exists only inside a binary (a serializer library, a loader, the
+  game executable), use **REA** to inspect it statically and cite the evidence.
+- Read open-source format libraries for the game family, if any exist, as references.
+- Use version-aware definitions and bounded readers. Compare the previous mod release, current source and converted output separately: source regressions are not conversion defects.
+
+Outcome per file: **as-is**, **wrapper-only change** (recompress/repack), **layout
+conversion**, or **not portable**.
+
+> Elden Ring/PS4 (verified): Havok files had the same SDK and pointer size on both
+> platforms but nine class layouts differed, so raw copies crashed. REA's static
+> inspection of the Havok serializer library showed that it writes fields from a type
+> registry (offset, size, alignment), which is the basis of the converter. Textures
+> needed a different header and swizzled block order. Plain-text scripts were accepted.
+
+## Phase 4. Cheapest proof first
+
+Where a compatible standalone file exists, load it untouched through redirection and check a mod-only change. Otherwise document the coordinated files needed for a meaningful test. For Elden Ring, identify the active regulation and choose a test-save or authorized Apollo route before diagnosing a failed load.
+
+> Elden Ring/PS4: an untouched mod regulation loaded with a fresh test save. Later, an existing save was preserved through Apollo by replacing only its embedded regulation. Importing the candidate changes the live save; verified encrypted and decrypted backups are required. Earlier external repacks failed, but their cause remains unresolved. Deleting saves is not required. See the end-to-end Apollo guide in the worked example.
 
 **Gate 4:** a mod-only change is visible on the console. If not, stop.
 
@@ -1082,10 +1183,8 @@ Keep verified and unverified results in separate lists.
 - Keep the game offline with modified files.
 - Large PC assets may exceed console memory. [Inference] Plan for reduced resolution.
 
-
-
 ---
-Source: pc-to-console-mod-port\references\rea.md
+Source: pc-to-console-mod-port/references/rea.md
 
 # REA (Reverse Engineer Anything)
 
@@ -1129,7 +1228,7 @@ and the person approves.
 
 ## Rules
 
-- Static analysis only. Do not run third-party DLLs or executables to "see what happens".
+- Use static analysis for investigations. A deliberately selected runtime dependency such as Oodle may be loaded only after source/hash checks and user authorization; that is separate from REA inspection.
 - REA shows what a binary contains. It does not prove the console will accept a converted
   file; only a console test proves that.
 - [Unverified] The tool list depends on the installed REA version; use the tools the
@@ -1137,16 +1236,14 @@ and the person approves.
 
 ## Example (Elden Ring → PS4, verified in the project records)
 
-- Verified the mod ZIP's inventory and integrity, with an evidence record.
+- Archive inventory and integrity were checked with local readers. REA was used for the serializer inspection below; do not attribute every format check to REA.
 - Inspected the Havok serializer library (`Havok.HKLib.Serialization.dll`) statically:
   it writes TAG0/TYPE/ITEM/PTCH and lays out fields from a type registry (offset, size,
   alignment). That explained why raw PC files crash on PS4 and shaped the converter in
   `../../examples/elden-ring-ps4/tools/`.
 
-
-
 ---
-Source: pc-to-console-mod-port\references\safety-and-licensing.md
+Source: pc-to-console-mod-port/references/safety-and-licensing.md
 
 # Safety, licensing and scope
 
@@ -1180,105 +1277,12 @@ Source: pc-to-console-mod-port\references\safety-and-licensing.md
   until the console was updated.
 - [Inference] Playing online with modified files can lead to account penalties. Keep
   the game offline while modded files are active.
-- Use a secondary account for tests. The save stores regulation data (see workflow),
-  so deleting saves is part of testing.
+- Prefer a secondary account/save for initial tests. Elden Ring PS4 also has an existing-save Apollo procedure: export, preserve verified encrypted and decrypted backups, build and verify a local candidate, then explicitly authorize its import. Importing changes the live save. Deleting saves is not required. A rollback restores the backup state and can discard later progress.
 
 ## Third-party tools
 
 Ask the user before installing or running any third-party binary. In the original
-project the only binary approved to run was the Oodle DLL, solely to compress and
-decompress game containers. Other tools (HKLib, DrSwizzler, Havok Content Tools) were
+project the only third-party PC format-processing binary approved to load was the Oodle DLL, solely to compress and decompress game containers. Apollo was separately used on the console for save export/import; Node.js and PowerShell ran the local scripts. Other tools (HKLib, DrSwizzler, Havok Content Tools) were
 studied from source or statically, not run. Tools that are documentation-only for you
 (for example WitchyBND or Smithbox/SoulsFormatsNEXT source) can be read to learn the
 formats.
-
-
----
-Source: pc-to-console-mod-port\SKILL.md
-
----
-name: pc-to-console-mod-port
-description: Guide an AI assistant through porting a data-only PC game mod to a console that already runs homebrew with file redirection, with Elden Ring-specific example scripts, using REA where appropriate to analyse binaries and cross the mod's files with the console game's own metadata, with verified and unverified steps kept apart.
-license: CC-BY-4.0
-metadata:
-  status: draft
-  last-updated: "2026-10-17"
-  worked-example: "examples/elden-ring-ps4 (Elden Ring PC mod → PS4, partly verified on console)"
----
-
-# Investigating PC-to-console ports of data-only mods
-
-This skill is a **method**, not a recipe for one game. It was distilled from one real
-port (Elden Ring PC → PS4, see `../examples/elden-ring-ps4/`). Use that example to see
-the method applied; do not assume its formats, paths or results apply to another game.
-
-Read first: `references/safety-and-licensing.md`. Then `references/methodology.md`.
-
-## What you need
-
-| Need | Why |
-|---|---|
-| **REA** (Reverse Engineer Anything, npm `rea-agents`) | Static analysis of binaries: the mod's files, the console's original files, tool libraries and, if needed, the game executable. See `references/rea.md`. |
-| The mod's files and their hashes | Source of the changes. |
-| The console's original files for the **same game version** | Target layout ("metadata" of the console build). Dumped by the person from their own console. |
-| A homebrew environment with **file redirection** already working | To load replaced files without modifying the game install. Prerequisite; this skill does not cover installing it. |
-| A file transfer route (usually FTP) | See `references/file-transfer.md`. |
-| Ideally the vanilla PC files of the mod's game version | To compute what the mod changed (deltas). |
-| Node.js or another scripting runtime | To write converters and verifiers. |
-
-## The core idea
-
-```
-mod binary (PC)  ──analyse──►  structure of each file  ─┐
-                                                         ├──► cross ──► convert ──► verify ──► test on console
-console original ──analyse──►  console metadata/layout  ─┘
-          ▲                         ▲
-          └──────── REA ────────────┘  (and on tool libraries / game executable when a
-                                        format rule is only defined inside a binary)
-```
-
-1. Analyse the mod's binary files: containers, compression, encryption, version
-   fields, internal type metadata.
-2. Analyse the console's originals of the same files the same way.
-3. Cross them: what is identical, what differs only in wrapper (compression,
-   platform byte), what differs in internal layout (field offsets, sizes,
-   alignment, pixel order, compiled vs text).
-4. Decide per file: **copy as-is**, **convert**, or **not portable**.
-5. Convert using the console original as the layout source, never by guessing.
-6. Verify locally (reverse conversion, graph comparison, re-read), then test on the
-   console in small batches.
-
-REA intervenes in steps 1–3 whenever a conclusion depends on what a binary contains or
-how a library/executable reads or writes a format. It replaces guessing with evidence.
-
-## Hard limits (never break these)
-
-1. **No redistribution** of game files, mod files or converted files. Share only your
-   own scripts and documentation.
-2. **No exploits, payloads or unofficial firmware**, and no links to them. The homebrew
-   environment is a prerequisite the person sets up beforehand.
-3. **Mod author's permission** before modifying their files.
-4. **Explicit "yes" from the person before every write to the console**, per batch.
-5. **Test account / test save only.**
-6. **No third-party binary is run** without the person's approval (name, source,
-   SHA256). Prefer static analysis with REA over running a DLL "to see".
-
-## Evidence discipline
-
-- Label every unchecked claim: `[Inference]`, `[Speculation]`, `[Unverified]`. If you
-  cannot check something, say "I cannot verify this".
-- Identify files by SHA256 and size, never by version label alone.
-- "It boots" proves only that it boots. Design a test only the modded file can pass.
-- Keep originals untouched; keep the previous console file renamed so it can be undone.
-- One batch at a time so a crash points to a file.
-
-## When to stop
-
-- File redirection cannot be shown working with a trivial, untouched file.
-- The mod contains native code (DLL/EXE/plugins) that the console cannot run.
-- The person's console game version differs from the mod's and no matching base
-  files are available.
-- The mod author refuses permission.
-
-
-For the complete Elden Ring connection-to-save workflow, read ../examples/elden-ring-ps4/APOLLO-END-TO-END.md. Included conversion scripts are specific to Elden Ring; other games need format research and new tooling.

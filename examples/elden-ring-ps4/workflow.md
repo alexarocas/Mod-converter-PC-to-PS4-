@@ -26,7 +26,7 @@ Ask the user, do not guess:
   `menu/**/*.tpf.dcx`, `msg/**/*.msgbnd.dcx`.
 - Record the DCX compression of each container (DFLT, ZSTD, KRAK). KRAK needs Oodle.
 - Read the declared regulation version (it is inside the decrypted BND4) and compare
-  it with the console's game version. A mismatch means the mod targets another patch.
+  it with the console regulation. Version labels alone do not establish compatibility: inspect the applicable schemas and changed data.
 
 ## 2. Prove file redirection works (Verified)
 
@@ -43,8 +43,7 @@ After every upload, download the file back and compare size and SHA256.
 ## 3. Load the mod's regulation (Verified)
 
 1. Put the mod's **untouched** `regulation.bin` in the AFR folder.
-2. Use a separate test account, or follow the Apollo procedure below to preserve an existing save. [Inference] The save carries its
-   own copy of the regulation, which is why an old save can hide the new file.
+2. Choose either an isolated test save or the [Apollo existing-save procedure](APOLLO-END-TO-END.md). The latter modifies the live save at import and requires verified backups. The embedded regulation was extracted and inspected; its exact runtime priority remains inferred.
 3. Start the game with no network connection.
 4. Check a value that only the mod changes. In the original project: the Samurai
    starting class showed level 12 / Dexterity 18 and calibration 1.17.
@@ -96,8 +95,7 @@ A weapon is invisible if its model is missing on PS4 (check `equipModelId` of th
 weapon in the regulation against the console's `parts/`). For the tested weapon the
 partsbnd held one TPF, three FLVER and two nested anibnds:
 
-- FLVER: PC and PS4 both little endian, version 0x2001A; kept as-is. [Unverified]
-  geometry/shader parameters were not fully audited.
+- FLVER: both used little endian version 0x2001A. The initial weapon worked without geometry edits, but later Bloodstarved/Tachikaze rigid-mesh fixes were needed. A matching version is not enough to establish compatibility.
 - Materials: check the referenced material names exist in the PS4
   `allmaterial.matbinbnd.dcx`.
 - TPF textures: must be converted (see `formats.md`). Validate the converter by
@@ -106,18 +104,17 @@ partsbnd held one TPF, three FLVER and two nested anibnds:
   not the player's.
 - Repack, KRAK level 7, decompress again and compare.
 
-Result on console: weapon visible and usable (user report "funciona!"). Not yet
+Result on console for the initial weapon: visible and usable (user report "works!"). Not yet
 checked: every attack, effect, area and long sessions.
 
 ## 9. Not verified yet
 
 - Weapons with cloth (`hcl*` Havok Cloth classes).
-- `sfx/*.ffxbnd.dcx` effects, `menu` textures, `c0000.chrbnd.dcx` (player mesh and
-  physics), `msgbnd` text files.
+- Full correctness of effects, menu textures, player mesh/physics and message files. These were converted/deployed in later batches; deployment does not validate every resource.
 - [Unverified] Discord report: Havok Content Tools 2018 "Standalone Filter Manager"
   with "Write to Platform → PlayStation" converts HKX; this was not tested.
 - [Inference] Very large textures (one was 2048×8192) may exceed memory on a base PS4.
-- 60 FPS patches exist only for older app versions; do not apply them to another one.
+- The examined 60 FPS patch listing did not match the tested application version. Do not apply a patch to a different version or treat that historical listing as a claim about all current patches.
 
 ## 10. Rollout
 
@@ -126,7 +123,6 @@ layouts, then cloth, then effects, menu, text, player chrbnd). Close the game be
 replacing files. For each batch record: files, hashes, user's "yes", the test done
 and the result, including the exact action that caused any crash.
 
+## Current gameplay limits
 
-## Updated save-preserving procedure (2026-10-18)
-
-Read [APOLLO-END-TO-END.md](APOLLO-END-TO-END.md) for the current procedure. Deleting saves is not required. Earlier repack failures do not prove universal incompatibility. Compare source-version losses separately from conversion errors; Marais combo follow-ups remain unresolved.
+The [end-to-end Apollo guide](APOLLO-END-TO-END.md) records the current save procedure and test results. Lightblades and Tachikaze R2 were reported working after later TAE recovery. Marais follow-ups remain unresolved despite sufficient FP. Moonveil's original-model fallback remains untested. The included historical conversion scripts do not automatically apply those later recovery/mesh fixes.

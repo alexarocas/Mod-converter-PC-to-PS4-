@@ -20,7 +20,7 @@ analysis with REA (Reverse Engineer Anything); see
 
 ## Expected layout
 
-Run every script from the project root (the folder that contains `analysis-26.1/`).
+For the historical conversion scripts, use `examples/elden-ring-ps4/tools/` as the research workspace root: it contains `analysis-26.1/`. Inspect each script's expected inputs before running it. The newer `build-save-regulation.cjs` accepts explicit paths and is invoked from the repository root in the Apollo guide.
 
 ```
 analysis-26.0/analyze-mod.cjs        DCX/BND4 reader (shared helper)
@@ -51,7 +51,7 @@ Status of each step (verified or not on a console) is in
 
 ## Licence
 
-Proposed: GPL-3.0. The format knowledge comes partly from reading SoulsFormatsNEXT and
+GPL-3.0; see `LICENSE`. The format knowledge comes partly from reading SoulsFormatsNEXT and
 WitchyBND, which are GPL-3.0. Texture swizzling was studied from DrSwizzler, which shows
 no licence file on GitHub. `ps4-texture-blocks.cjs` was compared with DrSwizzler's
 `PS4Swizzler.cs` on 2026-10-17: same generic technique (Morton order inside 8×8 tiles),

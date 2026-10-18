@@ -24,8 +24,7 @@ A workflow for investigating and porting data-only PC mods to console, with an E
 
 ## What is not included
 
-No game files, no mod files, no converted files, no proprietary DLLs, no exploits,
-payloads or firmware, and no links to them.
+No game files, mod assets, converted assets, personal saves or proprietary DLLs are distributed. The repository also excludes exploits, payloads and firmware. Links to source references and tool documentation are not downloads of those excluded files.
 
 ## Credits
 

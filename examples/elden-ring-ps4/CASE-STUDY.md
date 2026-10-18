@@ -1,7 +1,7 @@
 # Case study: Elden Ring PC mod → PS4
 
 Verified on: PS4 base/Slim, system software 13.52, GoldHEN 2.4b18.x, AFR plugin 1.210,
-Elden Ring app 01.25 (game 1.17.1), Clever's Moveset Modpack 26.1. Last updated 2026-10-17.
+Elden Ring app 01.25 (game 1.17.1). Resources originated from Clever's Moveset Modpack 26.1, with later 26.0 TAE recoveries. Identify the regulation by hash: project labels were inconsistent. Last updated 2026-10-18.
 
 
 This case study describes a workflow that was tested on one console with one mod. It is a
@@ -38,7 +38,7 @@ permission. This skill contains none of the mod's files.
    user to obtain the author's permission before converting anything, and record it.
 4. **Every write to the console needs an explicit "yes" from the user for that
    specific batch.** Explain exactly which files will be uploaded and where, first.
-5. **Never touch the user's main save.** Test on a secondary PSN/local account.
+5. **Preserve backups and agree on the save route.** Prefer an isolated test save. The authorized Apollo route modifies an existing live save at import; verify encrypted/decrypted backups and the candidate first.
 6. **Third-party binaries only with explicit user consent.** Name the binary, its
    source and its SHA256, and wait for approval.
 
@@ -56,27 +56,27 @@ permission. This skill contains none of the mod's files.
 - Upload in small batches (one weapon or one asset type at a time) so a crash can be
   attributed to a file.
 
-## Quick status of each asset type (as of 2026-10-17)
+## Asset status (updated 2026-10-18; partial validation)
 
 | Asset | PC file usable as-is on PS4? | Status |
 |---|---|---|
 | `regulation.bin` (mod's own, untouched) | Yes | Verified (existing-save Apollo route available; see workflow) |
-| `regulation.bin` repacked by us | No, error CE-34878-0 | Tested repacks failed; cause unresolved |
+| Experimental external `regulation.bin` repacks | Tested candidates failed with CE-34878-0 | Cause unresolved; distinct from the successful embedded-regulation Apollo procedure |
 | `action/script/c0000.hks` (plain text) | Yes | Verified boots; not every branch tested |
 | `chr/c0000.behbnd.dcx` | No, crashes | Verified: needs Havok layout conversion |
 | `chr/c0000*.anibnd.dcx` | No | Verified: converted versions play animations |
 | `parts/wp_a_*.partsbnd.dcx` | No | Verified for one weapon after TPF + nested HKX conversion |
-| Cloth (`hcl*` classes), SFX, menu TPF, `c0000.chrbnd`, `msgbnd` | Unknown | Not verified |
+| SFX, menu TPF, `c0000.chrbnd`, `msgbnd` | Asset-specific processing | Converted/deployed in later batches; complete visual/effect correctness remains unverified |
+| Cloth (`hcl*` classes) | No general claim | Not fully validated |
 
 ## When to stop
 
 - The homebrew environment or file redirection cannot be confirmed by a trivial test.
-- The untouched regulation of the mod does not load after the save reset.
+- The active regulation or redirection cannot be established after checking the chosen test-save or Apollo route. Do not delete a save as a diagnostic default.
 - The mod author refuses permission.
 - The user's game version differs from the mod's target version and no matching
   base files are available for comparison.
 
+## Current gameplay limits
 
-## Updated save-preserving procedure (2026-10-18)
-
-Read [APOLLO-END-TO-END.md](APOLLO-END-TO-END.md) for the current procedure. Deleting saves is not required. Earlier repack failures do not prove universal incompatibility. Compare source-version losses separately from conversion errors; Marais combo follow-ups remain unresolved.
+The [end-to-end Apollo guide](APOLLO-END-TO-END.md) records the current save procedure and test results. Lightblades and Tachikaze R2 were reported working after later TAE recovery. Marais follow-ups remain unresolved despite sufficient FP. Moonveil's original-model fallback remains untested. The included historical conversion scripts do not automatically apply those later recovery/mesh fixes.

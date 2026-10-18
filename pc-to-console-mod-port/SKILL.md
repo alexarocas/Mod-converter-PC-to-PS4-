@@ -4,7 +4,7 @@ description: Guide an AI assistant through porting a data-only PC game mod to a 
 license: CC-BY-4.0
 metadata:
   status: draft
-  last-updated: "2026-10-17"
+  last-updated: "2026-10-18"
   worked-example: "examples/elden-ring-ps4 (Elden Ring PC mod → PS4, partly verified on console)"
 ---
 
@@ -20,7 +20,7 @@ Read first: `references/safety-and-licensing.md`. Then `references/methodology.m
 
 | Need | Why |
 |---|---|
-| **REA** (Reverse Engineer Anything, npm `rea-agents`) | Static analysis of binaries: the mod's files, the console's original files, tool libraries and, if needed, the game executable. See `references/rea.md`. |
+| Format readers; REA when needed | Use validated readers for game data. REA can inspect executables and libraries when format rules require binary analysis. See `references/rea.md`. |
 | The mod's files and their hashes | Source of the changes. |
 | The console's original files for the **same game version** | Target layout ("metadata" of the console build). Dumped by the person from their own console. |
 | A homebrew environment with **file redirection** already working | To load replaced files without modifying the game install. Prerequisite; this skill does not cover installing it. |
@@ -35,8 +35,8 @@ mod binary (PC)  ──analyse──►  structure of each file  ─┐
                                                          ├──► cross ──► convert ──► verify ──► test on console
 console original ──analyse──►  console metadata/layout  ─┘
           ▲                         ▲
-          └──────── REA ────────────┘  (and on tool libraries / game executable when a
-                                        format rule is only defined inside a binary)
+          └──── format readers ────┘  (REA can inspect libraries / executables when a
+                                        format rule requires binary-code analysis)
 ```
 
 1. Analyse the mod's binary files: containers, compression, encryption, version
@@ -50,8 +50,7 @@ console original ──analyse──►  console metadata/layout  ─┘
 6. Verify locally (reverse conversion, graph comparison, re-read), then test on the
    console in small batches.
 
-REA intervenes in steps 1–3 whenever a conclusion depends on what a binary contains or
-how a library/executable reads or writes a format. It replaces guessing with evidence.
+Use validated format readers for game-data inspection. REA can supplement steps 1–3 when a rule depends on executable or library behavior. Record evidence from either route; static analysis does not prove runtime behavior.
 
 ## Hard limits (never break these)
 
@@ -61,7 +60,7 @@ how a library/executable reads or writes a format. It replaces guessing with evi
    environment is a prerequisite the person sets up beforehand.
 3. **Mod author's permission** before modifying their files.
 4. **Explicit "yes" from the person before every write to the console**, per batch.
-5. **Test account / test save only.**
+5. **Choose and document the save route.** Prefer a separate account/save for initial experiments. An existing-save operation requires explicit authorization, verified encrypted/decrypted backups, a locally checked candidate and a rollback procedure. Importing with Apollo changes the live save; preserving character bytes during candidate generation does not guarantee every later gameplay result.
 6. **No third-party binary is run** without the person's approval (name, source,
    SHA256). Prefer static analysis with REA over running a DLL "to see".
 
@@ -76,7 +75,7 @@ how a library/executable reads or writes a format. It replaces guessing with evi
 
 ## When to stop
 
-- File redirection cannot be shown working with a trivial, untouched file.
+- File redirection or the active data source cannot be established after checking the chosen save route. Some mods also require coordinated files rather than a single-file proof.
 - The mod contains native code (DLL/EXE/plugins) that the console cannot run.
 - The person's console game version differs from the mod's and no matching base
   files are available.
